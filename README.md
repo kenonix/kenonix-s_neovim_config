@@ -1,0 +1,1 @@
+# kenonix-s_neovim_config
