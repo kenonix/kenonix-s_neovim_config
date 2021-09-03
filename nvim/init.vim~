@@ -9,6 +9,16 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'preservim/nerdtree'
 Plug 'majutsushi/tagbar'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'junegunn/goyo.vim'
+
+" Use release branch (recommend)
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Or build from source code by using yarn: https://yarnpkg.com
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
+Plug 'puremourning/vimspector'
+
+
 
 " Initialize plugin system
 call plug#end()
@@ -22,15 +32,12 @@ let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 "USER setting
-if &diffopt !~# 'internal'
-  set diffexpr=MyDiff()
-endif
-
 set autoindent
 set cindent
 set nu
 set ts=4 "탭 너비
 set shiftwidth=4 "자동 인덴트할때 너비
+set mouse=a
 
 au BufReadPost * "마지막 편집위치 사용
 \ if line("'\"") > 0 && line("'\"") <=line("$") |
@@ -44,35 +51,52 @@ endif
 
 set laststatus=2 "상태바 표시 항상 사용
 set statusline=\ %<%l:%v\ [%P]%=%a\ %h%m%r\ %F\
+set scrolloff=999
 
 "set encoding=utf-8
 colorscheme jellybeans
-set guifont=D2coding:h12
+set guifont=D2coding:h14
 "set number relatibenumber
 set rnu
 
 
-function MyDiff()
-  let opt = '-a --binary '
-  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  let arg1 = v:fname_in
-  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  let arg1 = substitute(arg1, '!', '\!', 'g')
-  let arg2 = v:fname_new
-  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  let arg2 = substitute(arg2, '!', '\!', 'g')
-  let arg3 = v:fname_out
-  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  let arg3 = substitute(arg3, '!', '\!', 'g')
-  if $VIMRUNTIME =~ ' '
-    if &sh =~ '\<cmd'
-      if empty(&shellxquote)
-        let l:shxq_sav = ''
-        set shellxquote&
-      endif
-      let cmd = '"' . $VIMRUNTIME . '\diff"'
-    else
-      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-    endif
+" Ű ����
+" <F1> ����
+"map <F1> v]}zf
+map <F1> :tabnew<cr>
+" <F2> â�̵�
+map <F2> <C-w><C-w>
+" <F3> NERDTree
+map <F3> :NERDTreeToggle<cr>
+" <F4> Tlist
+"map <F4> :Tlist<cr>
+map <F4> :TagbarToggle<cr>
+
+map <F6> :Goyo <CR>
+function! s:goyo_enter()
+  set noshowmode
+  set noshowcmd
+  set scrolloff=999
+  set number
+  set rnu
+ endfunction
+ function! s:goyo_leave()
+  set showmode
+  set showcmd
+  set scrolloff=999
+endfunction
+map <F7> :term<cr>
+" <F7> shell
+map <F9> :%!xxd<cr>
+" <F8> Dox
+map <F10> :%!xxd -r<cr>
+" bnext, bprev
+map <F11> :bp<cr>
+map <F12> :bn<cr>
+" tabn
+map <S-Tab> gt<cr>
+" bnext
+map <S-F1> :bnext<cr>
+
+
 
